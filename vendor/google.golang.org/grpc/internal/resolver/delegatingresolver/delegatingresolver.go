@@ -248,6 +248,7 @@ func (r *delegatingResolver) updateClientConnStateLocked() error {
 		addresses = append(addresses, proxyattributes.Set(proxyAddr, proxyattributes.Options{
 			User:        r.proxyURL.User,
 			ConnectAddr: targetAddr.Addr,
+			ProxyScheme: r.proxyURL.Scheme,
 		}))
 	}
 
@@ -267,6 +268,7 @@ func (r *delegatingResolver) updateClientConnStateLocked() error {
 				addrs = append(addrs, proxyattributes.Set(proxyAddr, proxyattributes.Options{
 					User:        r.proxyURL.User,
 					ConnectAddr: targetAddr.Addr,
+					ProxyScheme: r.proxyURL.Scheme,
 				}))
 			}
 		}

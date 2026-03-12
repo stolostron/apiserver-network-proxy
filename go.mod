@@ -78,4 +78,7 @@ require (
 	sigs.k8s.io/yaml v1.6.0 // indirect
 )
 
-replace sigs.k8s.io/apiserver-network-proxy/konnectivity-client => ./konnectivity-client
+replace (
+	google.golang.org/grpc => github.com/stolostron/grpc-go v0.0.0-20260311160540-c45dcf25edc2
+	sigs.k8s.io/apiserver-network-proxy/konnectivity-client => ./konnectivity-client
+)

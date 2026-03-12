@@ -207,7 +207,7 @@ golang.org/x/time/rate
 # google.golang.org/genproto/googleapis/rpc v0.0.0-20250303144028-a0af3efb3deb
 ## explicit; go 1.23.0
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.72.1
+# google.golang.org/grpc v1.72.1 => github.com/stolostron/grpc-go v0.0.0-20260311160540-c45dcf25edc2
 ## explicit; go 1.23
 google.golang.org/grpc
 google.golang.org/grpc/attributes
@@ -746,4 +746,5 @@ sigs.k8s.io/structured-merge-diff/v6/value
 # sigs.k8s.io/yaml v1.6.0
 ## explicit; go 1.22
 sigs.k8s.io/yaml
+# google.golang.org/grpc => github.com/stolostron/grpc-go v0.0.0-20260311160540-c45dcf25edc2
 # sigs.k8s.io/apiserver-network-proxy/konnectivity-client => ./konnectivity-client
