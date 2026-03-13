@@ -79,6 +79,6 @@ require (
 )
 
 replace (
-	google.golang.org/grpc => github.com/stolostron/grpc-go v0.0.0-20260311160540-c45dcf25edc2
+	google.golang.org/grpc => github.com/stolostron/grpc-go v0.0.0-20260313103756-441825381483
 	sigs.k8s.io/apiserver-network-proxy/konnectivity-client => ./konnectivity-client
 )
