@@ -296,7 +296,7 @@ func (p *Proxy) runUDSFrontendServer(ctx context.Context, o *options.ProxyRunOpt
 	return stop, nil
 }
 
-func (p *Proxy) getTLSConfig(caFile, certFile, keyFile string, cipherSuites []string) (*tls.Config, error) {
+func (p *Proxy) getTLSConfig(caFile, certFile, keyFile string, cipherSuites []string, tlsMinVersion string) (*tls.Config, error) {
 	cert, err := tls.LoadX509KeyPair(certFile, keyFile)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load X509 key pair %s and %s: %v", certFile, keyFile, err)
@@ -304,8 +304,13 @@ func (p *Proxy) getTLSConfig(caFile, certFile, keyFile string, cipherSuites []st
 
 	cipherSuiteIDs := tlsCipherSuites(cipherSuites)
 
+	minVersion, err := util.GetTLSVersion(tlsMinVersion)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse TLS min version: %v", err)
+	}
+
 	if caFile == "" {
-		return &tls.Config{Certificates: []tls.Certificate{cert}, MinVersion: tls.VersionTLS12, CipherSuites: cipherSuiteIDs}, nil
+		return &tls.Config{Certificates: []tls.Certificate{cert}, MinVersion: minVersion, CipherSuites: cipherSuiteIDs}, nil // #nosec G402
 	}
 
 	certPool := x509.NewCertPool()
@@ -318,11 +323,11 @@ func (p *Proxy) getTLSConfig(caFile, certFile, keyFile string, cipherSuites []st
 		return nil, fmt.Errorf("failed to append cluster CA cert to the cert pool")
 	}
 
-	tlsConfig := &tls.Config{
+	tlsConfig := &tls.Config{ // #nosec G402
 		ClientAuth:   tls.RequireAndVerifyClientCert,
 		Certificates: []tls.Certificate{cert},
 		ClientCAs:    certPool,
-		MinVersion:   tls.VersionTLS12,
+		MinVersion:   minVersion,
 		CipherSuites: cipherSuiteIDs,
 	}
 
@@ -334,7 +339,7 @@ func (p *Proxy) runMTLSFrontendServer(ctx context.Context, o *options.ProxyRunOp
 
 	var tlsConfig *tls.Config
 	var err error
-	if tlsConfig, err = p.getTLSConfig(o.ServerCaCert, o.ServerCert, o.ServerKey, o.CipherSuites); err != nil {
+	if tlsConfig, err = p.getTLSConfig(o.ServerCaCert, o.ServerCert, o.ServerKey, o.CipherSuites, o.TLSMinVersion); err != nil {
 		return nil, err
 	}
 
@@ -392,7 +397,7 @@ func (p *Proxy) runMTLSFrontendServer(ctx context.Context, o *options.ProxyRunOp
 func (p *Proxy) runAgentServer(o *options.ProxyRunOptions, server *server.ProxyServer) error {
 	var tlsConfig *tls.Config
 	var err error
-	if tlsConfig, err = p.getTLSConfig(o.ClusterCaCert, o.ClusterCert, o.ClusterKey, o.CipherSuites); err != nil {
+	if tlsConfig, err = p.getTLSConfig(o.ClusterCaCert, o.ClusterCert, o.ClusterKey, o.CipherSuites, o.TLSMinVersion); err != nil {
 		return err
 	}
 
