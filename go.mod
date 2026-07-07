@@ -76,3 +76,5 @@ require (
 )
 
 replace sigs.k8s.io/apiserver-network-proxy/konnectivity-client => ./konnectivity-client
+
+replace google.golang.org/grpc => github.com/tesshuflower/grpc-go v0.0.0-20260706192936-04edbc19b401
